@@ -2,32 +2,29 @@
 #define STACK_STACK_H
 #include <algorithm>
 
-typedef enum elementType {
-    STRING = 0, LONG, INT, DOUBLE, CHAR,
-} elementType_t;
+#include "common.h"
 
 typedef struct stack {
-    void* array;
+    element_t* array;
     size_t capacity;
     size_t elementCount;
-    size_t elementSize;
-    elementType_t elementType;
 } stack_t;
 
-void initStack(stack_t* stack, size_t capacity, elementType_t elementType);
+void initStack(stack_t* stack, size_t capacity);
 
-void* stackPop(stack_t* stack);
+error_info_t stackPop(stack_t* stack, element_t* value);
 
-void* stackPush(stack_t* stack, void* element);
+error_info_t stackPush(stack_t *stack, element_t element);
 
 void printStack(stack_t* stack);
 
-void DPrintElement(void* element, elementType_t elementType);
-
-void* getElement(const stack_t* stack, size_t index);
-
-void printElementI(const stack_t* stack, size_t index);
-
-void printElement(void* element, elementType_t elementType);
+#define STACK_VALID(stack) \
+    do { \
+        error_info_t valid_res_777 = validateStack(stack); \
+        if (valid_res_777.err_code != SUCCESS) { \
+            SAFE_CALL(stackDump(stack, __FILE__, __LINE__, __func__, valid_res_777)); \
+            return valid_res_777;\
+        } \
+    } while(0)
 
 #endif //STACK_STACK_H

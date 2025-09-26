@@ -5,7 +5,6 @@
 #include "stack.h"
 
 const size_t MAX_REASONABLE_CAPACITY = 1024 * 1024 * 1024;
-const size_t MAX_REASONABLE_ELEMENT_SIZE = 1024 * 1024;
 
 error_info_t validateStack(const stack_t* stack);
 

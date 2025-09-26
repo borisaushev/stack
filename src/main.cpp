@@ -1,31 +1,20 @@
-#include <cstdio>
-
-#include "dump.h"
-#include "verifier.h"
-#include <common.h>
+#include "TXLib.h"
+#include "stack.h"
 
 int main() {
     stack_t stack = {};
-    initStack(&stack, 1, INT);
+    initStack(&stack, 1);
 
     for (int i = 0; i < 5; i++) {
-        stackPush(&stack, &i);
+        SAFE_CALL(stackPush(&stack, i));
     }
     printStack(&stack);
 
-    stackPop(&stack);
+    for (int i = 10; i >= 0; i--) {
+        element_t popRes = POISON;
+        SAFE_CALL(stackPop(&stack, &popRes));
+        DPRINTF("popRes = " REG "\n", popRes);
+    }
 
     printStack(&stack);
-
-    stackPop(&stack);
-
-    printStack(&stack);
-
-
-    const char* file = __FILE__;
-    int line = __LINE__;
-    const char* func = __func__;
-    stackDump(&stack, __FILE__, __LINE__, __FUNCTION__);
-
-    return 0;
 }

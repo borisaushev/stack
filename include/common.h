@@ -1,6 +1,12 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <stdio.h>
+
+typedef int element_t;
+# define REG "%d"
+const int POISON = 777;
+
 typedef enum errors {
     SUCCESS = 0,
     NULL_PTR,
@@ -18,10 +24,10 @@ typedef struct error_info {
 
 #define SAFE_CALL(func) \
     do { \
-        error_info_t result = (func); \
-        if (result.err_code != SUCCESS) { \
+        error_info_t sf_call_res_777 = (func); \
+        if (sf_call_res_777.err_code != SUCCESS) { \
             fprintf(stderr, "ERROR [%s:%d]: %s (code %d)\n", \
-            __FILE__, __LINE__, result.msg, result.err_code); \
+            __FILE__, __LINE__, sf_call_res_777.msg, sf_call_res_777.err_code); \
             exit(EXIT_FAILURE); \
         } \
     } while(0)
@@ -32,7 +38,9 @@ typedef struct error_info {
     do { \
         printf(__VA_ARGS__); \
         fflush(stdout); \
-    } while(0)
+    } while(0);
+
+
 #else
     #define DPRINTF(...) ;
 #endif //DEBUG
