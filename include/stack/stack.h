@@ -16,7 +16,7 @@ error_info_t stackPop(stack_t* stack, element_t* value);
 
 error_info_t stackPush(stack_t *stack, element_t element);
 
-void printStack(stack_t* stack);
+error_info_t printStack(stack_t* stack);
 
 #define STACK_VALID(stack) \
     do { \

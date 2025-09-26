@@ -15,6 +15,6 @@ int main() {
         SAFE_CALL(stackPop(&stack, &popRes));
         DPRINTF("popRes = " REG "\n", popRes);
     }
-
+    stack.array[stack.capacity + 1] = -1;
     printStack(&stack);
 }

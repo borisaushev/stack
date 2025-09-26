@@ -24,6 +24,12 @@ error_info_t validateStack(const stack_t* stack) {
         return {INVALID_INDEX, "index too big"};
     }
 
+    if (stack->array[0] != CANARRAY) {
+        return {CONTENTS_MODIFIED, "first canarray is modified"};
+    }
+    if (stack->array[stack->capacity + 1] != CANARRAY) {
+        return {CONTENTS_MODIFIED, "second canarray is modified"};
+    }
 
     DPRINTF("=== STACK VALIDATION PASSED ===\n");
     return {SUCCESS};

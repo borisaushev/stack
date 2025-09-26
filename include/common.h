@@ -6,15 +6,15 @@
 typedef int element_t;
 # define REG "%d"
 const int POISON = 777;
+const int CANARRAY = 0xABEBA;
 
 typedef enum errors {
     SUCCESS = 0,
     NULL_PTR,
     INVALID_CAPACITY,
     INVALID_INDEX,
-    INVALID_EL_SIZE,
-    INVALID_TYPE,
-    INVALID_PTR
+    INVALID_PTR,
+    CONTENTS_MODIFIED,
 } error_code_t;
 
 typedef struct error_info {

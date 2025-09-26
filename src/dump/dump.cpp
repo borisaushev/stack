@@ -47,7 +47,7 @@ error_info_t stackDump(const stack_t *stack,
     const char *status = (validation.err_code == SUCCESS) ? "" : "  ERROR! ";
     const char *error_msg = (validation.err_code != SUCCESS) ? validation.msg : "";
 
-    DPRINTF("\t%s  [%p] {%s%s  from %s() at \n\t\t\t%s:%d\n",
+    DPRINTF("\t%s  [%p] {%s%s  \n\t\t\tfrom %s() at %s:%d\n",
             "stack", stack, status, error_msg,
             function, file, line);
 
