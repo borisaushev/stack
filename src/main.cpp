@@ -1,6 +1,11 @@
 #include "TXLib.h"
 #include "stack.h"
 
+//TODO error command (breaks stack)
+//TODO var names in defines
+//TODO try operator
+//TODO new func for calc
+
 int main() {
     stack_t stack = {};
     initStack(&stack, 1);
@@ -13,6 +18,8 @@ int main() {
             int v1 = 0, v2 = 0;
             SAFE_CALL(stackPop(&stack, &v1));
             SAFE_CALL(stackPop(&stack, &v2));
+
+            // !stackPop(&stack, &v1)
 
             DPRINTF("stack pop: %d, %d\n", v1, v2);
             printf("ADD: %d\n", v1 + v2);

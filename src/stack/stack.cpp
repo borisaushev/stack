@@ -28,10 +28,10 @@ error_info_t stackPop(stack_t* stack, element_t* value) {
 
     STACK_VALID(stack);
 
-    if (stack->elementCount == 0) {
-        *value = POISON;
-        return {SUCCESS};
-    }
+    // if (stack->elementCount == 0) {
+    //     *value = POISON;
+    //     return {SUCCESS};
+    // }
 
     element_t result = stack->array[stack->elementCount - 1 + 1]; //защита канарейкой
     stack->array[stack->elementCount - 1 + 1] = POISON; // тут тоже

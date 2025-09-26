@@ -6,7 +6,7 @@
 typedef int element_t;
 # define REG "%d"
 const int POISON = 777;
-const int CANARRAY = 0xABEBA;
+const int CANARRAY = 0xAB0BA;
 
 typedef enum errors {
     SUCCESS = 0,
@@ -32,13 +32,16 @@ typedef struct error_info {
         } \
     } while(0)
 
+#define BEGIN do {
+#define END   } while (0);
+
 //DEBUG printf with immediate flush
 #ifdef DEBUG
 #define DPRINTF(...) \
-    do { \
+    BEGIN \
         printf(__VA_ARGS__); \
         fflush(stdout); \
-    } while(0);
+    END
 
 
 #else
