@@ -8,7 +8,7 @@
 
 void initStack(stack_t* stack, size_t capacity) {
     assert(stack);
-    DPRINTF("initializing stack");
+    DPRINTF("initializing stack\n");
     stack->capacity = capacity;
     stack->elementCount = 0;
     stack->array = (element_t*) calloc(capacity + 2, sizeof(element_t)); //защита канарейкой
@@ -19,7 +19,7 @@ void initStack(stack_t* stack, size_t capacity) {
     stack->array[0] = CANARRAY;
     stack->array[capacity + 1] = CANARRAY;
 
-    DPRINTF("stack init with poison values\n");
+    DPRINTF("stack init with poison values and canarrays\n");
 }
 
 error_info_t stackPop(stack_t* stack, element_t* value) {
