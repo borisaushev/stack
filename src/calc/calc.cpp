@@ -4,10 +4,18 @@
 
 #include "stack.h"
 
+#define EXIT_ON_FALSE(func) \
+    BEGIN \
+    if(!func(&stack)) { \
+        PRINTERR("invalid input at line %d\n", line);\
+        exit(1); \
+    } \
+    END
 
-static void popTwo(stack_t* stack, int* v1, int* v2) {
+static bool popTwo(stack_t* stack, int* v1, int* v2) {
     SAFE_CALL(stackPop(stack, v1));
     SAFE_CALL(stackPop(stack, v2));
+    return *v1 != POISON && *v2 != POISON;
 }
 
 static void greetUser() {
@@ -18,39 +26,53 @@ static void greetUser() {
     printf("Comandu pishy i tam schitat budet da\n");
 }
 
-void add(stack_t* stack) {
+bool add(stack_t *stack) {
     int v1 = POISON, v2 = POISON;
-    popTwo(stack, &v1, &v2);
+    if (!popTwo(stack, &v1, &v2)) {
+        return false;
+    }
 
     DPRINTF("stack pop: %d, %d\n", v1, v2);
     printf("ADD: %d\n", v1 + v2);
 
     SAFE_CALL(stackPush(stack, v1 + v2));
+
+    return true;
 }
 
-void sub(stack_t* stack) {
+bool sub(stack_t *stack) {
     int v1 = POISON, v2 = POISON;
-    popTwo(stack, &v1, &v2);
+    if (!popTwo(stack, &v1, &v2)) {
+        return false;
+    }
 
     DPRINTF("stack pop: %d, %d\n", v1, v2);
     printf("SUB: %d\n", v2 - v1);
 
     SAFE_CALL(stackPush(stack, v2 - v1));
+
+    return true;
 }
 
-void mul(stack_t* stack) {
+bool mul(stack_t *stack) {
     int v1 = POISON, v2 = POISON;
-    popTwo(stack, &v1, &v2);
+    if (!popTwo(stack, &v1, &v2)) {
+        return false;
+    }
 
     DPRINTF("stack pop: %d, %d\n", v1, v2);
     printf("MUL: %d\n", v1 * v2);
 
     SAFE_CALL(stackPush(stack, v1 * v2));
+
+    return true;
 }
 
-bool div(stack_t* stack) {
+bool div_calc(stack_t* stack) {
     int v1 = POISON, v2 = POISON;
-    popTwo(stack, &v1, &v2);
+    if (!popTwo(stack, &v1, &v2)) {
+        return false;
+    }
     DPRINTF("stack pop: %d, %d\n", v1, v2);
 
     if (v1 == 0) {
@@ -63,20 +85,31 @@ bool div(stack_t* stack) {
     return true;
 }
 
-void out(stack_t* stack) {
+bool out(stack_t *stack) {
     int val = POISON;
     SAFE_CALL(stackPop(stack, &val));
+    if (val == POISON) {
+        return false;
+    }
 
     DPRINTF("stack pop: %d\n", val);
     printf("OUT: %d\n", val);
+
+    return true;
 }
 
-void push(stack_t stack, char buf[20]) {
+bool push(stack_t* stack, char buf[20]) {
     int val = POISON;
-    sscanf(buf, "PUSH %d\n", &val);
+    int res = sscanf(buf, "PUSH %d\n", &val);
+
+    if (res != 1) {
+        return false;
+    }
 
     DPRINTF("push: %d\n", val);
-    SAFE_CALL(stackPush(&stack, val));
+    SAFE_CALL(stackPush(stack, val));
+
+    return true;
 }
 
 void runCalc() {
@@ -91,29 +124,28 @@ void runCalc() {
     while (strcmp(buf, "HLT\n") != 0) {
         DPRINTF("read line: '%s'\n", buf);
         if (strcmp(buf, "ADD\n") == 0) {
-            add(&stack);
+            EXIT_ON_FALSE(add);
         }
         else if (strcmp(buf, "SUB\n") == 0) {
-            sub(&stack);
+            EXIT_ON_FALSE(sub);
         }
         else if (strcmp(buf, "MUL\n") == 0) {
-            mul(&stack);
+            EXIT_ON_FALSE(mul);
         }
         else if (strcmp(buf, "DIV\n") == 0) {
-            if (!div(&stack)) {
-                PRINTERR("Division by zero at line %d\n", line);
-                exit(1);
-            }
+            EXIT_ON_FALSE(div_calc);
         }
         else if (strcmp(buf, "OUT\n") == 0) {
-            out(&stack);
+            EXIT_ON_FALSE(out);
         }
         else if (strncmp(buf, "PUSH", 4) == 0) {
-            push(stack, buf);
+            if (!push(&stack, buf)) {
+                PRINTERR("unparsable input at line %d\n", line);
+            }
         }
         else {
-            PRINTERR("invalid input at line %d\n", line);
-            exit(0);
+            PRINTERR("invalid command at line %d\n", line);
+            exit(1);
         }
 
         fgets(buf, MAX_INP_LEN, stdin);
